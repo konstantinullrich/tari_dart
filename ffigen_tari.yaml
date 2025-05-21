@@ -1,0 +1,6 @@
+name: Tari
+description: tari bindings
+output: 'lib/src/generated_bindings_tari.g.dart'
+headers:
+  entry-points:
+    - '../../base_layer/wallet_ffi/wallet.h'
