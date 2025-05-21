@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:tari/ffi.dart';
-import 'package:tari/src/generated_bindings_tari.g.dart' as tari;
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart' as tari;
 import 'package:tari/src/types.dart';
 import 'package:tari/src/utils/base58_encoder.dart';
 import 'package:tari/src/utils/pointer_char_extension.dart';

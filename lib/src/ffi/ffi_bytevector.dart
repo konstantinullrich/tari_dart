@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:tari/ffi.dart';
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 
 /// Wrapper for native byte vector type.
 class FFIByteVector extends FFIBase<ByteVector> {

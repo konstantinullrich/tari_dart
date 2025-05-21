@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:tari/ffi.dart';
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 
 /// Wrapper for the native balance type.
 class FFIBalance extends FFIBase<TariBalance> {

@@ -1,6 +1,6 @@
 import 'dart:ffi';
 
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 
 typedef CallbackReceivedTransaction = void Function(Pointer<Void>, Pointer<TariPendingInboundTransaction>);
 typedef CallbackReceivedTransactionReply = void Function(Pointer<Void>, Pointer<TariCompletedTransaction>);

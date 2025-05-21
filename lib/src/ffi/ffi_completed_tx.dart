@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:tari/ffi.dart';
 import 'package:tari/src/ffi/ffi_tx_base.dart';
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 import 'package:tari/src/utils/pointer_char_extension.dart';
 import 'package:tari/src/utils/uint64_to_bigint.dart';
 

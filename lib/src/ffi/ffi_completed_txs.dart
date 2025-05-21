@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:tari/ffi.dart';
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 
 class FFICompletedTxs
     extends FFIIterableBase<FFICompletedTx, TariCompletedTransactions> {

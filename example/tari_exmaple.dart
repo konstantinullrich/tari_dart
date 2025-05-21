@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:tari/src/ffi/ffi_tari_transport_config.dart';
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 import 'package:tari/tari.dart';
 
 import 'callback.dart';

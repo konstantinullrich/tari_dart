@@ -1,6 +1,6 @@
 import 'dart:ffi';
 
-import 'package:tari/src/generated_bindings_tari.g.dart';
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 
 class CallbackPlaceholders {
   // Placeholder for callback_received_transaction

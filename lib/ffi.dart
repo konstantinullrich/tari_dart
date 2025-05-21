@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:tari/src/generated_bindings_tari.g.dart' as tari;
+import 'package:tari/src/generated_bindings_tari.freeze.g.dart' as tari;
 
 export 'src/ffi/ffi_balance.dart';
 export 'src/ffi/ffi_base.dart';
