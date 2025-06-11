@@ -9,6 +9,7 @@ class FFIPublicKeys extends FFIBase<TariPublicKeys> {
     this.pointer = pointer;
   }
 
+
   int getLength() =>
       runWithError((errorPtr) => lib.public_keys_get_length(pointer, errorPtr));
 

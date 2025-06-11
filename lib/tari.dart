@@ -15,7 +15,7 @@ String tariNetwork = 'mainnet';
 
 void _freeAll(List<Pointer> pointers) {
   for (final ptr in pointers) {
-    lib.free(ptr as Pointer<Void>);
+    // lib.free(ptr as Pointer<Void>);
   }
 }
 
@@ -163,31 +163,55 @@ class TariWallet {
   }
 
   bool startRecovery(CallbackRecoveryProgress recoveryCallback) {
-    final recoveryOutputMessagePtr = ''.toNativeUtf8().cast<Char>();
-
+    print('Starting wallet recovery process...');
+    
     final recoveryProgress =
     NativeCallable<CallableRecoveryProgress>.listener(recoveryCallback);
+    print('Recovery progress callback registered');
 
-    final hasStarted = runWithError((errorPtr) =>
-        lib.wallet_start_recovery(
+    try {
+      final errorOut = malloc<Int>();
+      final publicKeys = lib.public_keys_create( errorOut);
+      final pkPointer =  FFIPublicKey.fromHex('e46c810703da304aa4fb774ce3926bea224133f52d115915cc5a0341a393fb13');
+
+      lib.public_keys_add(publicKeys, pkPointer.pointer, errorOut);
+      
+      
+
+      final hasStarted = runWithError((errorPtr) {
+        print('Attempting to start recovery with wallet pointer: ${wallet != null ? 'valid' : 'null'}');
+        final result = lib.wallet_start_recovery(
             wallet!,
             nullptr,
             recoveryProgress.nativeFunction,
-            recoveryOutputMessagePtr,
-            errorPtr));
+            nullptr, // Using nullptr instead of empty string to avoid double free
+            errorPtr);
+        
+        if (errorPtr.value != 0) {
+          print('Error during recovery start: ${errorPtr.value}');
+        }
+        return result;
+      });
 
-    recoveryOutputMessagePtr.free();
-    return hasStarted;
+      print('Recovery process ${hasStarted ? 'started successfully' : 'failed to start'}');
+      return hasStarted;
+    } catch (e) {
+      print('Exception during recovery process: $e');
+      return false;
+    }
   }
 
   bool isRecovering() =>
       runWithError(
-              (errorPtr) =>
-              lib.wallet_is_recovery_in_progress(wallet!, errorPtr));
+              (errorPtr) {
+                final result = lib.wallet_is_recovery_in_progress(wallet!, errorPtr);
+
+                return result;
+              });
 
   bool setBaseNode() {
-    final pkPointer = FFIPublicKey.fromHex('c42312a2bdd7d17b12047b515d36c982e56573cc5e9d6d19cf29210624ec02b');
-    final address = '/ip4/148.113.143.145/tcp/18189'.toNativeUtf8().cast<Char>();
+    final pkPointer = FFIPublicKey.fromHex('e46c810703da304aa4fb774ce3926bea224133f52d115915cc5a0341a393fb13');
+    final address = '/ip4/192.168.0.205/tcp/9998'.toNativeUtf8().cast<Char>();
     final result = runWithError((errorPtr) => lib.wallet_set_base_node_peer(wallet!, pkPointer.pointer, address, errorPtr));
 
     pkPointer.destroy();
@@ -218,7 +242,7 @@ FFICommsConfig getWalletConfig({
   String walletDatabase = "wallet.dat",
   String publicAddress = "/ip4/0.0.0.0/tcp/9838",
 }) =>
-    FFICommsConfig(publicAddress, transport, walletDatabase, path, 30);
+    FFICommsConfig(publicAddress, transport, walletDatabase, path, 300);
 
 TariWallet createWallet({
   required FFICommsConfig commsConfig,

@@ -39,7 +39,7 @@ class FFICompletedTx extends FFITxBase<TariCompletedTransaction> {
       lib.completed_transaction_get_timestamp(pointer, errorPtr)));
 
   String getPaymentId() => runWithError((errorPtr) => lib
-      .completed_transaction_get_payment_id(pointer, errorPtr)
+      .completed_transaction_get_user_payment_id(pointer, errorPtr)
       .toDartString()!);
 
   int getStatus() => runWithError(
