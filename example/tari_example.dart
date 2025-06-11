@@ -102,6 +102,8 @@ Future<void> main2() async {
   // Monitor recovery process
   while (wallet.isRecovering()) {
     await Future.delayed(Duration(seconds: 5)); // Check every 5 seconds
+    final balance = wallet.getBalance();
+    print("Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
   }
   print("Recovery process finished");
 

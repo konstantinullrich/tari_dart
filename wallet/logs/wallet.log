@@ -1,0 +1,12 @@
+2025-06-11 06:29:54.420707000 [r2d2] ERROR database is locked
+2025-06-11 06:29:54.420803000 [r2d2] ERROR database is locked
+2025-06-11 06:29:54.917136000 [comms::builder] WARN  Test addresses are enabled! This is invalid and potentially insecure when running a production node.
+2025-06-11 06:29:54.917468000 [r2d2] ERROR database is locked
+2025-06-11 06:29:55.325607000 [r2d2] ERROR database is locked
+2025-06-11 06:29:55.775262000 [wallet::connectivity] WARN  1 wallet requests waiting for connection
+2025-06-11 06:29:55.775784000 [wallet::utxo_scanning] ERROR Error scanning UTXOs: Utxo Scanning Error: 'Failed to scan UTXO's after 2 attempt(s) using sync peer(s). Aborting...
+2025-06-11 06:29:55.856998000 [wallet::connectivity] WARN  Could not dial base node peer '44d11d7c19103cfb4bf3ce0351'
+2025-06-11 06:30:01.856471000 [comms::connection_manager::dialer] WARN  Reply oneshot was closed before dial response for peer '44d11d7c19103cfb4bf3ce0351' was sent
+2025-06-11 06:30:07.116329000 [wallet::transaction_service::service] WARN  Error completing Transaction Validation Protocol (id: 13726419892398462983): TransactionValidationInProgress
+2025-06-11 06:30:07.116417000 [comms::rpc::client] WARN  Client request was cancelled before request was sent
+2025-06-11 06:30:07.116475000 [comms::rpc::client] WARN  Client request was cancelled after request was sent. This means that you are making an RPC request and then immediately dropping the response! (protocol = t/bnwallet/1)
