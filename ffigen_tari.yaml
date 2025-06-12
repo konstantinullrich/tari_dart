@@ -3,4 +3,13 @@ description: tari bindings
 output: 'lib/src/generated_bindings_tari.g.dart'
 headers:
   entry-points:
-    - '../../base_layer/wallet_ffi/wallet.h'
+    - '../tari/base_layer/wallet_ffi/wallet.h'
+  include-directives:
+    - '../tari/base_layer/wallet_ffi/wallet.h'
+compiler-opts:
+  - '-I/usr/include'
+  - '-I/usr/local/include'
+  - '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include'
+  - '-I/Library/Developer/CommandLineTools/usr/lib/clang/*/include'
+  - '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1'
+  - '-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/arm64-apple-darwin'

@@ -110,11 +110,11 @@ class CallbackPlaceholders {
 
   static Pointer<
           NativeFunction<
-              Void Function(
-                  Pointer<Void>, UnsignedLongLong, Pointer<TariTransactionSendStatus>)>>
+              Void Function(Pointer<Void>, UnsignedLongLong,
+                  Pointer<TariTransactionSendStatus>)>>
       get callbackTransactionSendResultPtr => Pointer.fromFunction<
-              Void Function(
-                  Pointer<Void>, UnsignedLongLong, Pointer<TariTransactionSendStatus>)>(
+              Void Function(Pointer<Void>, UnsignedLongLong,
+                  Pointer<TariTransactionSendStatus>)>(
           callbackTransactionSendResult);
 
   // Placeholder for callback_transaction_cancellation
@@ -134,7 +134,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_txo_validation_complete
   static void callbackTxoValidationComplete(
       Pointer<Void> context, int txo, int validation) {
-    print('callbackTxoValidationComplete called');
+    print('callbackTxoValidationComplete called $txo $validation');
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>, Uint64, Uint64)>>
@@ -170,7 +170,8 @@ class CallbackPlaceholders {
   // Placeholder for callback_transaction_validation_complete
   static void callbackTransactionValidationComplete(
       Pointer<Void> context, int transaction, int validation) {
-    print('callbackTransactionValidationComplete called');
+    print(
+        'callbackTransactionValidationComplete called $transaction $validation');
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>, Uint64, Uint64)>>
@@ -190,7 +191,18 @@ class CallbackPlaceholders {
 
   // Placeholder for callback_connectivity_status
   static void callbackConnectivityStatus(Pointer<Void> context, int status) {
-    print('callbackConnectivityStatus called');
+    // 0: Connecting, 1: Online, 2: Offline
+    switch (status) {
+      case 0:
+        print('Connecting to base node...');
+        break;
+      case 1:
+        print('Connected to base node successfully');
+        break;
+      case 2:
+        print('Connection to base node offline');
+        break;
+    }
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>, Uint64)>>
@@ -200,7 +212,7 @@ class CallbackPlaceholders {
 
   // Placeholder for callback_wallet_scanned_height
   static void callbackWalletScannedHeight(Pointer<Void> context, int height) {
-    print('callbackWalletScannedHeight called');
+    print('callbackWalletScannedHeight called $height');
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>, Uint64)>>

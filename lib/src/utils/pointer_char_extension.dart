@@ -18,7 +18,9 @@ extension CStringUtil on Pointer<Char> {
 }
 
 extension GetIntAndFree on Pointer<Int> {
-  void free() => lib.free(this as Pointer<Void>);
+  void free() => {
+    // 
+  };
 
   int toInt() {
     final val = value;
