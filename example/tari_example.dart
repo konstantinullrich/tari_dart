@@ -15,7 +15,7 @@ typedef CallbackReceivedTransaction = Void Function(
     Pointer<Void>, Pointer<TariPendingInboundTransaction>);
 typedef CallbackConnectivityStatus = Void Function(Pointer<Void>, Uint64);
 
-Future<void> main2() async {
+Future<void> main2(String? mnemonic) async {
   final transport = FFITariTransportConfig.tcp("/ip4/127.0.0.1/tcp/18183");
   final comms = getWalletConfig(path: "./wallet", transport: transport);
 
@@ -59,8 +59,8 @@ Future<void> main2() async {
           CallbackPlaceholders.callbackWalletScannedHeight,
       callbackBaseNodeState: CallbackPlaceholders.callbackBaseNodeState,
       dnsSeeds: 'seeds.tari.com',
-      mnemonic:
-          'scare behind olive upon high buyer unusual frown robust resemble firm hundred excess supreme salon search same box peanut palm normal child pact upon');
+      mnemonic: mnemonic
+  );
 
   final sw = wallet.getMnemonic();
   print(sw);
@@ -71,48 +71,69 @@ Future<void> main2() async {
   print(address.base58);
 
   wallet.setBaseNode();
-   await Future.delayed(Duration(seconds: 5)); // Check every 5 seconds
+  await Future.delayed(Duration(seconds: 5)); // Give it time to connect to the base node
 
+ 
+  print("Initial chain tip height: ${CallbackPlaceholders.chainTipHeight}");
 
+  var isRecovering = true;
   wallet.startRecovery((_, event, arg1, arg2) {
     switch (event) {
+      case 0:
+        print("[Recovery] Connecting to base node...");
+        break;
+      case 1:
+        print("[Recovery] Connection to base node established");
+        break;
       case 2:
-        print("Connection to base node failed. Retry ${arg1}/${arg2}");
+        print("[Recovery] Connection to base node failed. Retry ${arg1}/${arg2}");
         break;
       case 3:
-        print("Scanning progress: ${arg1}/${arg2} blocks");
+        print("[Recovery] Scanning progress: ${arg1}/${arg2} blocks");
+        isRecovering = false;
         break;
       case 4:
         print(
-            "Recovery completed! Recovered ${arg1} UTXOs (${arg2} MicroMinotari)");
+            "[Recovery] Recovery completed! Recovered ${arg1} UTXOs (${arg2} MicroMinotari)");
+        isRecovering = false;
         break;
       case 5:
-        print("Scanning round failed. Retry ${arg1}/${arg2}");
+        print("[Recovery] Scanning round failed. Retry ${arg1}/${arg2}");
         break;
       case 6:
-        print("Recovery failed!");
+        print("[Recovery] Recovery failed!");
+        isRecovering = false;
+        break;
+      default:
+        print("[Recovery] Unknown event: $event ${arg1} ${arg2}");
         break;
     }
   });
-   await Future.delayed(Duration(seconds: 5)); // Check every 5 seconds
-
-  print(wallet.isRecovering());
-  
+  await Future.delayed(Duration(seconds: 5)); // Give it time to scan the blocks
 
   // Monitor recovery process
-  while (wallet.isRecovering()) {
+  while (isRecovering) {
     await Future.delayed(Duration(seconds: 5)); // Check every 5 seconds
     final balance = wallet.getBalance();
-    print("Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
+    print("Scanned height: ${CallbackPlaceholders.scannedHeight} / ${CallbackPlaceholders.chainTipHeight}");
+    print(
+        "Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
+    if (CallbackPlaceholders.scannedHeight >= CallbackPlaceholders.chainTipHeight && CallbackPlaceholders.chainTipHeight > 0) {
+        break;
+    }
   }
   print("Recovery process finished");
 
   final balance = wallet.getBalance();
-  print("Final balance: ${balance.available}");
+  print(
+        "Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
 
-  final name = stdin.readLineSync();
 }
 
-Future<void> main() async {
-  Isolate.run(main2);
+Future<void> main(List<String> arguments) async {
+  String? mnemonic;
+  if (arguments.isNotEmpty) {
+    mnemonic = arguments[0];
+  }
+  Isolate.run(() => main2(mnemonic));
 }
