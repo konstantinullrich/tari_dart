@@ -218,7 +218,7 @@ class CallbackPlaceholders {
 
   // Placeholder for callback_wallet_scanned_height
   static void callbackWalletScannedHeight(Pointer<Void> context, int height) {
-    print('Scanned height: $height / ${_chainTipHeight}');
+    print('[Callback] Scanned height: $height / ${_chainTipHeight}');
     _scannedHeight = height;
   }
 

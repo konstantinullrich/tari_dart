@@ -361,6 +361,7 @@ TariWallet createWallet({
       ));
 
   seedWords?.destroy();
+  print('Wallet recovery pointer: ${isRecoveryPointer.value}');
 
   _freeAll([
     logPathPtr,
