@@ -170,12 +170,6 @@ class TariWallet {
     print('Recovery progress callback registered');
 
     try {
-      final errorOut = malloc<Int>();
-      final publicKeys = lib.public_keys_create( errorOut);
-      final pkPointer =  FFIPublicKey.fromHex('e46c810703da304aa4fb774ce3926bea224133f52d115915cc5a0341a393fb13');
-
-      lib.public_keys_add(publicKeys, pkPointer.pointer, errorOut);
-      
       
 
       final hasStarted = runWithError((errorPtr) {
@@ -208,6 +202,8 @@ class TariWallet {
 
                 return result;
               });
+
+  int getBaseNodeHeight() =>  0;
 
   bool setBaseNode() {
     final pkPointer = FFIPublicKey.fromHex('e46c810703da304aa4fb774ce3926bea224133f52d115915cc5a0341a393fb13');

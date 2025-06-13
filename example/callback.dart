@@ -1,18 +1,24 @@
 import 'dart:ffi';
 
 import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
+import 'package:ffi/ffi.dart';
+import 'package:tari/ffi.dart';
 
 class CallbackPlaceholders {
+  static int _chainTipHeight = 0;
+  static int _scannedHeight = 0;
+  static int get chainTipHeight => _chainTipHeight;
+  static int get scannedHeight => _scannedHeight;
   // Placeholder for callback_received_transaction
   static void callbackReceivedTransaction(Pointer<Void> context,
       Pointer<TariPendingInboundTransaction> transaction) {
-    print('callbackReceivedTransaction called');
+    // print('callbackReceivedTransaction called');
   }
 
   // Placeholder for callback_received_transaction_reply
   static void callbackReceivedTransactionReply(
       Pointer<Void> context, Pointer<TariCompletedTransaction> transaction) {
-    print('callbackReceivedTransactionReply called');
+    // print('callbackReceivedTransactionReply called');
   }
 
   static Pointer<
@@ -25,7 +31,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_received_finalized_transaction
   static void callbackReceivedFinalizedTransaction(
       Pointer<Void> context, Pointer<TariCompletedTransaction> transaction) {
-    print('callbackReceivedFinalizedTransaction called');
+    // print('callbackReceivedFinalizedTransaction called');
   }
 
   static Pointer<
@@ -38,7 +44,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_transaction_broadcast
   static void callbackTransactionBroadcast(
       Pointer<Void> context, Pointer<TariCompletedTransaction> transaction) {
-    print('callbackTransactionBroadcast called');
+    // print('callbackTransactionBroadcast called');
   }
 
   static Pointer<
@@ -51,7 +57,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_transaction_mined
   static void callbackTransactionMined(
       Pointer<Void> context, Pointer<TariCompletedTransaction> transaction) {
-    print('callbackTransactionMined called');
+    // print('callbackTransactionMined called');
   }
 
   static Pointer<
@@ -64,7 +70,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_transaction_mined_unconfirmed
   static void callbackTransactionMinedUnconfirmed(Pointer<Void> context,
       Pointer<TariCompletedTransaction> transaction, int unconfirmed) {
-    print('callbackTransactionMinedUnconfirmed called');
+    // print('callbackTransactionMinedUnconfirmed called');
   }
 
   static Pointer<
@@ -78,7 +84,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_faux_transaction_confirmed
   static void callbackFauxTransactionConfirmed(
       Pointer<Void> context, Pointer<TariCompletedTransaction> transaction) {
-    print('callbackFauxTransactionConfirmed called');
+    // print('callbackFauxTransactionConfirmed called');
   }
 
   static Pointer<
@@ -91,7 +97,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_faux_transaction_unconfirmed
   static void callbackFauxTransactionUnconfirmed(Pointer<Void> context,
       Pointer<TariCompletedTransaction> transaction, int unconfirmed) {
-    print('callbackFauxTransactionUnconfirmed called');
+    // print('callbackFauxTransactionUnconfirmed called');
   }
 
   static Pointer<
@@ -145,7 +151,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_contacts_liveness_data_updated
   static void callbackContactsLivenessDataUpdated(
       Pointer<Void> context, Pointer<TariContactsLivenessData> data) {
-    print('callbackContactsLivenessDataUpdated called');
+    // print('callbackContactsLivenessDataUpdated called');
   }
 
   static Pointer<
@@ -158,7 +164,7 @@ class CallbackPlaceholders {
   // Placeholder for callback_balance_updated
   static void callbackBalanceUpdated(
       Pointer<Void> context, Pointer<TariBalance> balance) {
-    print('callbackBalanceUpdated called');
+    // print('callbackBalanceUpdated called');
   }
 
   static Pointer<
@@ -170,8 +176,8 @@ class CallbackPlaceholders {
   // Placeholder for callback_transaction_validation_complete
   static void callbackTransactionValidationComplete(
       Pointer<Void> context, int transaction, int validation) {
-    print(
-        'callbackTransactionValidationComplete called $transaction $validation');
+    // print(
+    //     'callbackTransactionValidationComplete called $transaction $validation');
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>, Uint64, Uint64)>>
@@ -181,7 +187,7 @@ class CallbackPlaceholders {
 
   // Placeholder for callback_saf_messages_received
   static void callbackSafMessagesReceived(Pointer<Void> context) {
-    print('callbackSafMessagesReceived called');
+    // print('callbackSafMessagesReceived called');
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>)>>
@@ -197,7 +203,7 @@ class CallbackPlaceholders {
         print('Connecting to base node...');
         break;
       case 1:
-        print('Connected to base node successfully');
+        // print('Connected to base node successfully');
         break;
       case 2:
         print('Connection to base node offline');
@@ -212,7 +218,8 @@ class CallbackPlaceholders {
 
   // Placeholder for callback_wallet_scanned_height
   static void callbackWalletScannedHeight(Pointer<Void> context, int height) {
-    print('callbackWalletScannedHeight called $height');
+    print('Scanned height: $height / ${_chainTipHeight}');
+    _scannedHeight = height;
   }
 
   static Pointer<NativeFunction<Void Function(Pointer<Void>, Uint64)>>
@@ -223,7 +230,9 @@ class CallbackPlaceholders {
   // Placeholder for callback_base_node_state
   static void callbackBaseNodeState(
       Pointer<Void> context, Pointer<TariBaseNodeState> state) {
-    print('callbackBaseNodeState called');
+    final errorPtr = malloc<Int>();
+    _chainTipHeight = lib.basenode_state_get_height_of_the_longest_chain(state, errorPtr);
+    // print('Current chain tip height: $_chainTipHeight');
   }
 
   static Pointer<
