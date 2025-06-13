@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:tari/ffi.dart';
 import 'package:tari/src/ffi/ffi_tari_transport_config.dart';
 import 'package:tari/src/generated_bindings_tari.freeze.g.dart';
 import 'package:tari/tari.dart';
@@ -59,8 +60,12 @@ Future<void> main2(String? mnemonic) async {
           CallbackPlaceholders.callbackWalletScannedHeight,
       callbackBaseNodeState: CallbackPlaceholders.callbackBaseNodeState,
       dnsSeeds: 'seeds.tari.com',
-      mnemonic: mnemonic
-  );
+      mnemonic: mnemonic);
+
+  var errorOut = malloc<Int>();
+  lib.wallet_clear_value(
+      wallet.wallet!, 'recovery_data'.toNativeUtf8().cast<Char>(), errorOut);
+  malloc.free(errorOut);
 
   final sw = wallet.getMnemonic();
   print(sw);
@@ -71,11 +76,11 @@ Future<void> main2(String? mnemonic) async {
   print(address.base58);
 
   wallet.setBaseNode();
-  await Future.delayed(Duration(seconds: 5)); // Give it time to connect to the base node
+  await Future.delayed(
+      Duration(seconds: 5)); // Give it time to connect to the base node
 
- 
   print("Initial chain tip height: ${CallbackPlaceholders.chainTipHeight}");
-
+  
   var isRecovering = true;
   wallet.startRecovery((_, event, arg1, arg2) {
     switch (event) {
@@ -86,7 +91,8 @@ Future<void> main2(String? mnemonic) async {
         print("[Recovery] Connection to base node established");
         break;
       case 2:
-        print("[Recovery] Connection to base node failed. Retry ${arg1}/${arg2}");
+        print(
+            "[Recovery] Connection to base node failed. Retry ${arg1}/${arg2}");
         break;
       case 3:
         print("[Recovery] Scanning progress: ${arg1}/${arg2} blocks");
@@ -115,19 +121,21 @@ Future<void> main2(String? mnemonic) async {
   while (isRecovering) {
     await Future.delayed(Duration(seconds: 5)); // Check every 5 seconds
     final balance = wallet.getBalance();
-    print("Scanned height: ${CallbackPlaceholders.scannedHeight} / ${CallbackPlaceholders.chainTipHeight}");
+    print(
+        "[Main] Scanned height: ${CallbackPlaceholders.scannedHeight} / ${CallbackPlaceholders.chainTipHeight}");
     print(
         "Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
-    if (CallbackPlaceholders.scannedHeight >= CallbackPlaceholders.chainTipHeight && CallbackPlaceholders.chainTipHeight > 0) {
-        break;
+    if (CallbackPlaceholders.scannedHeight >=
+            CallbackPlaceholders.chainTipHeight &&
+        CallbackPlaceholders.chainTipHeight > 0) {
+      break;
     }
   }
   print("Recovery process finished");
 
   final balance = wallet.getBalance();
   print(
-        "Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
-
+      "Balance: ${balance.available} ${balance.pendingIncoming} ${balance.pendingOutgoing} ${balance.timeLocked}");
 }
 
 Future<void> main(List<String> arguments) async {
